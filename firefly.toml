@@ -9,6 +9,7 @@ bg = { path = "assets/bg.png" }
 cat = { path = "assets/cat.png" }
 done = { path = "assets/done.png" }
 holder = { path = "assets/holder.png" }
+holder2 = { path = "assets/holder2.png" }
 paws = { path = "assets/paws.png" }
 roll = { path = "assets/roll.png" }
 stripe = { path = "assets/stripe.png" }
