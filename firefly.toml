@@ -2,3 +2,13 @@ author_id = "lux"
 app_id = "tpcat"
 author_name = "Lux"
 app_name = "Toilet Paper Cat"
+
+[files]
+_splash = { path = "assets/splash.png" }
+bg = { path = "assets/bg.png" }
+cat = { path = "assets/cat.png" }
+done = { path = "assets/done.png" }
+holder = { path = "assets/holder.png" }
+paws = { path = "assets/paws.png" }
+roll = { path = "assets/roll.png" }
+stripe = { path = "assets/stripe.png" }
