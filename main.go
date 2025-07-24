@@ -20,6 +20,8 @@ var (
 	// How much of toilet paper has been unrolled
 	progress int
 
+	afterProgress int
+
 	// If the player made any progess on this update
 	moving bool
 
@@ -54,6 +56,9 @@ func update() {
 	}
 
 	if moving {
+		if progress >= maxProgress {
+			afterProgress++
+		}
 		pawsFrame++
 		if pawsFrame >= 4 {
 			pawsFrame = 0
@@ -66,6 +71,10 @@ func update() {
 }
 
 func render() {
+	if afterProgress >= 20 {
+		firefly.DrawImage(imgDone, firefly.Point{X: -20})
+		return
+	}
 	firefly.DrawImage(imgBg, firefly.Point{})
 	firefly.DrawImage(imgCat, firefly.Point{X: 166, Y: 39})
 	firefly.DrawImage(imgHolder, firefly.Point{X: 63, Y: 68})
