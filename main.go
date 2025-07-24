@@ -2,6 +2,8 @@ package main
 
 import "github.com/firefly-zero/firefly-go/firefly"
 
+const maxProgress = 8000
+
 var (
 	imgBg      firefly.Image
 	imgCat     firefly.Image
@@ -40,7 +42,7 @@ func update() {
 	pad, touched := firefly.ReadPad(firefly.Combined)
 	if touched {
 		if oldY != nil {
-			diff := pad.Y - *oldY
+			diff := (pad.Y - *oldY) / 10
 			if diff > 0 {
 				progress += diff
 				moving = true
@@ -68,17 +70,28 @@ func render() {
 	firefly.DrawImage(imgCat, firefly.Point{X: 166, Y: 39})
 	firefly.DrawImage(imgHolder, firefly.Point{X: 63, Y: 68})
 	renderStripe()
-	roll := imgRoll.Sub(firefly.Point{}, firefly.Size{W: 84, H: 76})
-	firefly.DrawSubImage(roll, firefly.Point{X: 70, Y: 31})
-
+	renderRoll()
 	firefly.DrawImage(imgHolder2, firefly.Point{X: 63, Y: 68})
 	renderPaws()
 }
 
 func renderStripe() {
+	if progress >= maxProgress {
+		return
+	}
 	x := 53 * (pawsFrame / 4)
 	sub := imgStripe.Sub(firefly.Point{X: x}, firefly.Size{W: 53, H: 240})
 	firefly.DrawSubImage(sub, firefly.Point{X: 93, Y: 71})
+}
+
+func renderRoll() {
+	const width = 84
+	x := width * (progress / (maxProgress / 4))
+	if progress >= maxProgress {
+		x = width * 4
+	}
+	sub := imgRoll.Sub(firefly.Point{X: x}, firefly.Size{W: width, H: 76})
+	firefly.DrawSubImage(sub, firefly.Point{X: 70, Y: 31})
 }
 
 func renderPaws() {
