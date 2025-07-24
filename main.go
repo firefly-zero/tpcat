@@ -42,7 +42,7 @@ func update() {
 	pad, touched := firefly.ReadPad(firefly.Combined)
 	if touched {
 		if oldY != nil {
-			diff := (pad.Y - *oldY) / 10
+			diff := (*oldY - pad.Y) / 10
 			if diff > 0 {
 				progress += diff
 				moving = true
@@ -55,11 +55,11 @@ func update() {
 
 	if moving {
 		pawsFrame++
-		if pawsFrame >= 8 {
+		if pawsFrame >= 4 {
 			pawsFrame = 0
 		}
 		stripeFrame++
-		if stripeFrame >= 8 {
+		if stripeFrame >= 4 {
 			stripeFrame = 0
 		}
 	}
@@ -79,7 +79,7 @@ func renderStripe() {
 	if progress >= maxProgress {
 		return
 	}
-	x := 53 * (pawsFrame / 4)
+	x := 53 * (pawsFrame / 2)
 	sub := imgStripe.Sub(firefly.Point{X: x}, firefly.Size{W: 53, H: 240})
 	firefly.DrawSubImage(sub, firefly.Point{X: 93, Y: 71})
 }
@@ -95,7 +95,7 @@ func renderRoll() {
 }
 
 func renderPaws() {
-	x := 69 * (pawsFrame / 4)
+	x := 69 * (pawsFrame / 2)
 	sub := imgPaws.Sub(firefly.Point{X: x}, firefly.Size{W: 69, H: 82})
 	firefly.DrawSubImage(sub, firefly.Point{X: 125, Y: 51})
 }
