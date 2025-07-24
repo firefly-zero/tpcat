@@ -71,7 +71,7 @@ func update() {
 }
 
 func render() {
-	if afterProgress >= 20 {
+	if afterProgress >= 4 {
 		firefly.DrawImage(imgDone, firefly.Point{X: -20})
 		return
 	}
