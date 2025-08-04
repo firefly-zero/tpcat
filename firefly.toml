@@ -1,7 +1,7 @@
 author_id = "lux"
 app_id = "tpcat"
 author_name = "Lux"
-app_name = "Toilet Paper Cat"
+app_name = "Cat vs Toilet Paper"
 
 [files]
 _splash = { path = "assets/splash.png" }
