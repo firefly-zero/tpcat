@@ -2,6 +2,8 @@
 
 The ultimate cat simulator. Written in Go for [Firefly Zero](https://fireflyzero.com/) using [the official SDK](https://github.com/firefly-zero/firefly-go).
 
+This is a port of a little quirky game from [Rachel's Game Pack](https://moosadee.itch.io/rachels-playdate-game-pack) for [Playdate](https://play.date/) by [Rachel Wil Sha Singh](https://moosadee.itch.io/).
+
 ## Installation
 
 Install from the [catalog](https://catalog.fireflyzero.com/) using [firefly-cli](https://github.com/firefly-zero/firefly-cli):
