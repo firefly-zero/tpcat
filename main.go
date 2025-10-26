@@ -105,26 +105,30 @@ func renderPaws() {
 }
 
 func loadAssets() {
-	imgBg = firefly.LoadFile("bg", nil).Must().Image()
-	imgCat = firefly.LoadFile("cat", nil).Must().Image()
-	imgDone = firefly.LoadFile("done", nil).Must().Image()
-	imgHolder = firefly.LoadFile("holder", nil).Must().Image()
+	imgBg = loadImage("bg")
+	imgCat = loadImage("cat")
+	imgDone = loadImage("done")
+	imgHolder = loadImage("holder")
 	imgsPaws = []firefly.Image{
-		firefly.LoadFile("paws1", nil).Must().Image(),
-		firefly.LoadFile("paws2", nil).Must().Image(),
-		firefly.LoadFile("paws3", nil).Must().Image(),
-		firefly.LoadFile("paws4", nil).Must().Image(),
+		loadImage("paws1"),
+		loadImage("paws2"),
+		loadImage("paws3"),
+		loadImage("paws4"),
 	}
 	imgsRoll = []firefly.Image{
-		firefly.LoadFile("roll1", nil).Must().Image(),
-		firefly.LoadFile("roll2", nil).Must().Image(),
-		firefly.LoadFile("roll3", nil).Must().Image(),
-		firefly.LoadFile("roll4", nil).Must().Image(),
-		firefly.LoadFile("roll5", nil).Must().Image(),
+		loadImage("roll1"),
+		loadImage("roll2"),
+		loadImage("roll3"),
+		loadImage("roll4"),
+		loadImage("roll5"),
 	}
 	imgsStripe = []firefly.Image{
-		firefly.LoadFile("stripe1", nil).Must().Image(),
-		firefly.LoadFile("stripe2", nil).Must().Image(),
-		firefly.LoadFile("stripe3", nil).Must().Image(),
+		loadImage("stripe1"),
+		loadImage("stripe2"),
+		loadImage("stripe3"),
 	}
+}
+
+func loadImage(name string) firefly.Image {
+	return firefly.LoadFile(name, nil).Must().Image()
 }
