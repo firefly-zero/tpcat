@@ -2,17 +2,16 @@ package main
 
 import "github.com/firefly-zero/firefly-go/firefly"
 
-const maxProgress = 8000
+const maxProgress = 2000
 
 var (
 	imgBg      firefly.Image
 	imgCat     firefly.Image
 	imgDone    firefly.Image
 	imgHolder  firefly.Image
-	imgHolder2 firefly.Image
-	imgPaws    firefly.Image
-	imgRoll    firefly.Image
-	imgStripe  firefly.Image
+	imgsPaws   []firefly.Image
+	imgsRoll   []firefly.Image
+	imgsStripe []firefly.Image
 
 	// The Y value of touchpad on the previous iteration.
 	oldY *int
@@ -60,11 +59,11 @@ func update() {
 			afterProgress++
 		}
 		pawsFrame++
-		if pawsFrame >= 4 {
+		if pawsFrame >= len(imgsPaws) {
 			pawsFrame = 0
 		}
 		stripeFrame++
-		if stripeFrame >= 4 {
+		if stripeFrame >= len(imgsStripe) {
 			stripeFrame = 0
 		}
 	}
@@ -72,15 +71,14 @@ func update() {
 
 func render() {
 	if afterProgress >= 4 {
-		firefly.DrawImage(imgDone, firefly.Point{X: -20})
+		firefly.DrawImage(imgDone, firefly.Point{})
 		return
 	}
 	firefly.DrawImage(imgBg, firefly.Point{})
-	firefly.DrawImage(imgCat, firefly.Point{X: 166, Y: 39})
-	firefly.DrawImage(imgHolder, firefly.Point{X: 63, Y: 68})
+	firefly.DrawImage(imgCat, firefly.Point{})
+	firefly.DrawImage(imgHolder, firefly.Point{})
 	renderStripe()
 	renderRoll()
-	firefly.DrawImage(imgHolder2, firefly.Point{X: 63, Y: 68})
 	renderPaws()
 }
 
@@ -88,25 +86,22 @@ func renderStripe() {
 	if progress >= maxProgress {
 		return
 	}
-	x := 53 * (pawsFrame / 2)
-	sub := imgStripe.Sub(firefly.Point{X: x}, firefly.Size{W: 53, H: 240})
-	firefly.DrawSubImage(sub, firefly.Point{X: 93, Y: 71})
+	img := imgsStripe[stripeFrame]
+	firefly.DrawImage(img, firefly.Point{})
 }
 
 func renderRoll() {
-	const width = 84
-	x := width * (progress / (maxProgress / 4))
+	idx := progress * 4 / maxProgress
 	if progress >= maxProgress {
-		x = width * 4
+		idx = 4
 	}
-	sub := imgRoll.Sub(firefly.Point{X: x}, firefly.Size{W: width, H: 76})
-	firefly.DrawSubImage(sub, firefly.Point{X: 70, Y: 31})
+	img := imgsRoll[idx]
+	firefly.DrawImage(img, firefly.Point{})
 }
 
 func renderPaws() {
-	x := 69 * (pawsFrame / 2)
-	sub := imgPaws.Sub(firefly.Point{X: x}, firefly.Size{W: 69, H: 82})
-	firefly.DrawSubImage(sub, firefly.Point{X: 125, Y: 51})
+	img := imgsPaws[pawsFrame]
+	firefly.DrawImage(img, firefly.Point{})
 }
 
 func loadAssets() {
@@ -114,8 +109,22 @@ func loadAssets() {
 	imgCat = firefly.LoadFile("cat", nil).Must().Image()
 	imgDone = firefly.LoadFile("done", nil).Must().Image()
 	imgHolder = firefly.LoadFile("holder", nil).Must().Image()
-	imgHolder2 = firefly.LoadFile("holder2", nil).Must().Image()
-	imgPaws = firefly.LoadFile("paws", nil).Must().Image()
-	imgRoll = firefly.LoadFile("roll", nil).Must().Image()
-	imgStripe = firefly.LoadFile("stripe", nil).Must().Image()
+	imgsPaws = []firefly.Image{
+		firefly.LoadFile("paws1", nil).Must().Image(),
+		firefly.LoadFile("paws2", nil).Must().Image(),
+		firefly.LoadFile("paws3", nil).Must().Image(),
+		firefly.LoadFile("paws4", nil).Must().Image(),
+	}
+	imgsRoll = []firefly.Image{
+		firefly.LoadFile("roll1", nil).Must().Image(),
+		firefly.LoadFile("roll2", nil).Must().Image(),
+		firefly.LoadFile("roll3", nil).Must().Image(),
+		firefly.LoadFile("roll4", nil).Must().Image(),
+		firefly.LoadFile("roll5", nil).Must().Image(),
+	}
+	imgsStripe = []firefly.Image{
+		firefly.LoadFile("stripe1", nil).Must().Image(),
+		firefly.LoadFile("stripe2", nil).Must().Image(),
+		firefly.LoadFile("stripe3", nil).Must().Image(),
+	}
 }

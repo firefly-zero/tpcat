@@ -21,6 +21,6 @@ roll3 = { path = "assets/roll_3.png" }
 roll4 = { path = "assets/roll_4.png" }
 roll5 = { path = "assets/roll_5.png" }
 
-stripe_1 = { path = "assets/stripe_1.png" }
-stripe_2 = { path = "assets/stripe_2.png" }
-stripe_3 = { path = "assets/stripe_3.png" }
+stripe1 = { path = "assets/stripe_1.png" }
+stripe2 = { path = "assets/stripe_2.png" }
+stripe3 = { path = "assets/stripe_3.png" }
