@@ -2,16 +2,16 @@ package main
 
 import "github.com/firefly-zero/firefly-go/firefly"
 
-const maxProgress = 2000
+const maxProgress = 8000
 
 var (
 	imgBg      firefly.Image
 	imgCat     firefly.Image
 	imgDone    firefly.Image
 	imgHolder  firefly.Image
-	imgsPaws   []firefly.Image
-	imgsRoll   []firefly.Image
-	imgsStripe []firefly.Image
+	imgsPaws   [4]firefly.Image
+	imgsRoll   [5]firefly.Image
+	imgsStripe [3]firefly.Image
 
 	// The Y value of touchpad on the previous iteration.
 	oldY *int
@@ -20,12 +20,6 @@ var (
 	progress int
 
 	afterProgress int
-
-	// If the player made any progess on this update
-	moving bool
-
-	pawsFrame   int
-	stripeFrame int
 )
 
 func init() {
@@ -39,33 +33,24 @@ func boot() {
 }
 
 func update() {
-	moving = false
 	pad, touched := firefly.ReadPad(firefly.Combined)
 	if touched {
 		if oldY != nil {
 			diff := (*oldY - pad.Y) / 10
 			if diff > 0 {
-				progress += diff
-				moving = true
+				updateDiff(diff)
 			}
 		}
 		oldY = &pad.Y
 	} else {
 		oldY = nil
 	}
+}
 
-	if moving {
-		if progress >= maxProgress {
-			afterProgress++
-		}
-		pawsFrame++
-		if pawsFrame >= len(imgsPaws) {
-			pawsFrame = 0
-		}
-		stripeFrame++
-		if stripeFrame >= len(imgsStripe) {
-			stripeFrame = 0
-		}
+func updateDiff(diff int) {
+	progress += diff
+	if progress >= maxProgress {
+		afterProgress++
 	}
 }
 
@@ -86,7 +71,8 @@ func renderStripe() {
 	if progress >= maxProgress {
 		return
 	}
-	img := imgsStripe[stripeFrame]
+	idx := (progress / 40) % len(imgsStripe)
+	img := imgsStripe[idx]
 	firefly.DrawImage(img, firefly.Point{})
 }
 
@@ -100,7 +86,8 @@ func renderRoll() {
 }
 
 func renderPaws() {
-	img := imgsPaws[pawsFrame]
+	idx := (progress / 40) % len(imgsPaws)
+	img := imgsPaws[idx]
 	firefly.DrawImage(img, firefly.Point{})
 }
 
@@ -109,20 +96,20 @@ func loadAssets() {
 	imgCat = loadImage("cat")
 	imgDone = loadImage("done")
 	imgHolder = loadImage("holder")
-	imgsPaws = []firefly.Image{
+	imgsPaws = [...]firefly.Image{
 		loadImage("paws1"),
 		loadImage("paws2"),
 		loadImage("paws3"),
 		loadImage("paws4"),
 	}
-	imgsRoll = []firefly.Image{
+	imgsRoll = [...]firefly.Image{
 		loadImage("roll1"),
 		loadImage("roll2"),
 		loadImage("roll3"),
 		loadImage("roll4"),
 		loadImage("roll5"),
 	}
-	imgsStripe = []firefly.Image{
+	imgsStripe = [...]firefly.Image{
 		loadImage("stripe1"),
 		loadImage("stripe2"),
 		loadImage("stripe3"),
