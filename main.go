@@ -9,10 +9,9 @@ var (
 	imgCat     firefly.Image
 	imgDone    firefly.Image
 	imgHolder  firefly.Image
-	imgHolder2 firefly.Image
-	imgPaws    firefly.Image
-	imgRoll    firefly.Image
-	imgStripe  firefly.Image
+	imgsPaws   [4]firefly.Image
+	imgsRoll   [5]firefly.Image
+	imgsStripe [3]firefly.Image
 
 	// The Y value of touchpad on the previous iteration.
 	oldY *int
@@ -21,12 +20,6 @@ var (
 	progress int
 
 	afterProgress int
-
-	// If the player made any progess on this update
-	moving bool
-
-	pawsFrame   int
-	stripeFrame int
 )
 
 func init() {
@@ -40,47 +33,37 @@ func boot() {
 }
 
 func update() {
-	moving = false
 	pad, touched := firefly.ReadPad(firefly.Combined)
 	if touched {
 		if oldY != nil {
 			diff := (*oldY - pad.Y) / 10
 			if diff > 0 {
-				progress += diff
-				moving = true
+				updateDiff(diff)
 			}
 		}
 		oldY = &pad.Y
 	} else {
 		oldY = nil
 	}
+}
 
-	if moving {
-		if progress >= maxProgress {
-			afterProgress++
-		}
-		pawsFrame++
-		if pawsFrame >= 4 {
-			pawsFrame = 0
-		}
-		stripeFrame++
-		if stripeFrame >= 4 {
-			stripeFrame = 0
-		}
+func updateDiff(diff int) {
+	progress += diff
+	if progress >= maxProgress {
+		afterProgress++
 	}
 }
 
 func render() {
 	if afterProgress >= 4 {
-		firefly.DrawImage(imgDone, firefly.Point{X: -20})
+		firefly.DrawImage(imgDone, firefly.Point{})
 		return
 	}
 	firefly.DrawImage(imgBg, firefly.Point{})
-	firefly.DrawImage(imgCat, firefly.Point{X: 166, Y: 39})
-	firefly.DrawImage(imgHolder, firefly.Point{X: 63, Y: 68})
+	firefly.DrawImage(imgCat, firefly.Point{})
+	firefly.DrawImage(imgHolder, firefly.Point{})
 	renderStripe()
 	renderRoll()
-	firefly.DrawImage(imgHolder2, firefly.Point{X: 63, Y: 68})
 	renderPaws()
 }
 
@@ -88,34 +71,51 @@ func renderStripe() {
 	if progress >= maxProgress {
 		return
 	}
-	x := 53 * (pawsFrame / 2)
-	sub := imgStripe.Sub(firefly.Point{X: x}, firefly.Size{W: 53, H: 240})
-	firefly.DrawSubImage(sub, firefly.Point{X: 93, Y: 71})
+	idx := (progress / 40) % len(imgsStripe)
+	img := imgsStripe[idx]
+	firefly.DrawImage(img, firefly.Point{})
 }
 
 func renderRoll() {
-	const width = 84
-	x := width * (progress / (maxProgress / 4))
+	idx := progress * 4 / maxProgress
 	if progress >= maxProgress {
-		x = width * 4
+		idx = 4
 	}
-	sub := imgRoll.Sub(firefly.Point{X: x}, firefly.Size{W: width, H: 76})
-	firefly.DrawSubImage(sub, firefly.Point{X: 70, Y: 31})
+	img := imgsRoll[idx]
+	firefly.DrawImage(img, firefly.Point{})
 }
 
 func renderPaws() {
-	x := 69 * (pawsFrame / 2)
-	sub := imgPaws.Sub(firefly.Point{X: x}, firefly.Size{W: 69, H: 82})
-	firefly.DrawSubImage(sub, firefly.Point{X: 125, Y: 51})
+	idx := (progress / 40) % len(imgsPaws)
+	img := imgsPaws[idx]
+	firefly.DrawImage(img, firefly.Point{})
 }
 
 func loadAssets() {
-	imgBg = firefly.LoadFile("bg", nil).Must().Image()
-	imgCat = firefly.LoadFile("cat", nil).Must().Image()
-	imgDone = firefly.LoadFile("done", nil).Must().Image()
-	imgHolder = firefly.LoadFile("holder", nil).Must().Image()
-	imgHolder2 = firefly.LoadFile("holder2", nil).Must().Image()
-	imgPaws = firefly.LoadFile("paws", nil).Must().Image()
-	imgRoll = firefly.LoadFile("roll", nil).Must().Image()
-	imgStripe = firefly.LoadFile("stripe", nil).Must().Image()
+	imgBg = loadImage("bg")
+	imgCat = loadImage("cat")
+	imgDone = loadImage("done")
+	imgHolder = loadImage("holder")
+	imgsPaws = [...]firefly.Image{
+		loadImage("paws1"),
+		loadImage("paws2"),
+		loadImage("paws3"),
+		loadImage("paws4"),
+	}
+	imgsRoll = [...]firefly.Image{
+		loadImage("roll1"),
+		loadImage("roll2"),
+		loadImage("roll3"),
+		loadImage("roll4"),
+		loadImage("roll5"),
+	}
+	imgsStripe = [...]firefly.Image{
+		loadImage("stripe1"),
+		loadImage("stripe2"),
+		loadImage("stripe3"),
+	}
+}
+
+func loadImage(name string) firefly.Image {
+	return firefly.LoadFile(name, nil).Must().Image()
 }
